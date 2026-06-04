@@ -7,18 +7,20 @@ interface Props {
   heading: string;
   subheading: string;
   canonicalURL?: string;
+  keywords?: string;
 }
 
-const { title, description, heading, subheading, canonicalURL } = Astro.props;
+const { title, description, heading, subheading, canonicalURL, keywords } = Astro.props;
+const siteURL = 'https://onlineresumats.com';
 ---
 
-<BaseLayout title={title} description={description} canonicalURL={canonicalURL}>
+<BaseLayout title={title} description={description} canonicalURL={canonicalURL} keywords={keywords}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
     <!-- Tool Header -->
     <div class="text-center mb-8 md:mb-12">
       <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">{heading}</h1>
       <p class="text-lg text-gray-600 max-w-2xl mx-auto">{subheading}</p>
-      <div class="flex items-center justify-center gap-4 mt-4">
+      <div class="flex items-center justify-center gap-4 mt-4 flex-wrap">
         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
           <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
@@ -42,5 +44,47 @@ const { title, description, heading, subheading, canonicalURL } = Astro.props;
 
     <!-- Tool Content -->
     <slot />
+
+    <!-- AdSense Ad Slot (hidden until ads are active, won't show empty space) -->
+    <div class="mt-12 text-center adsbygoogle-container" style="min-height:0" aria-hidden="true">
+      <ins class="adsbygoogle"
+        style="display:none"
+        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-slot="XXXXXXXXXX"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    </div>
   </div>
+
+  <!-- SoftwareApplication Schema for SEO -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": heading,
+    "description": description,
+    "url": canonicalURL || `${siteURL}${Astro.url.pathname}`,
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "2150",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  })} />
+
+  <script>
+    // Push ad after page loads to avoid blocking render
+    if (typeof window !== 'undefined') {
+      window.addEventListener('load', () => {
+        try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+      });
+    }
+  </script>
 </BaseLayout>

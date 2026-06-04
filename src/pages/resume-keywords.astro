@@ -4,10 +4,11 @@ import ToolLayout from '../layouts/ToolLayout.astro';
 
 <ToolLayout
   title="Resume Keyword Analyzer - Extract & Optimize Keywords | OnlineResumATS"
-  description="Analyze your resume keywords. Find hard skills, soft skills, action verbs, and get suggestions for missing power words. Compare against job descriptions."
+  description="Analyze your resume keywords. Find hard skills, soft skills, action verbs, and get suggestions for missing power words. Compare against job descriptions. 100% free."
   heading="Keyword Analyzer"
   subheading="Extract, analyze, and optimize the keywords in your resume"
   canonicalURL="https://onlineresumats.com/resume-keywords"
+  keywords="resume keyword analyzer, resume keyword scanner, resume power words, action verbs resume, resume skills extractor, resume keyword optimization, job description keyword match, resume word analysis"
 >
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
     <!-- Input -->
@@ -99,7 +100,6 @@ import ToolLayout from '../layouts/ToolLayout.astro';
   </div>
 
   <script>
-    import { parsePDF } from '../utils/pdfParser';
     import { analyzeKeywords } from '../utils/keywordExtractor';
 
     let resumeText = '';
@@ -118,6 +118,7 @@ import ToolLayout from '../layouts/ToolLayout.astro';
         status.textContent = 'Parsing...';
         status.className = 'mt-2 text-sm text-blue-600';
         try {
+          const { parsePDF } = await import('../utils/pdfParser');
           resumeText = await parsePDF(file);
           textArea.value = resumeText;
           status.textContent = '✓ Parsed';

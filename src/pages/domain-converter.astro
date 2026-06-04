@@ -11,10 +11,11 @@ const domains = Object.entries(domainKeywords).map(([key, val]) => ({
 
 <ToolLayout
   title="Resume Domain Converter - Convert Resume for Any Industry | OnlineResumATS"
-  description="Convert your resume for Fintech, Gaming, Healthcare, Education, Shipping, Cybersecurity, AI/ML, or E-Commerce. Unique tool that maps generic terms to industry-specific language."
+  description="Convert your resume for Fintech, Gaming, Healthcare, Education, Shipping, Cybersecurity, AI/ML, or E-Commerce. Unique tool that maps generic terms to industry-specific language. Free."
   heading="Domain Converter"
   subheading="Convert your resume's language to match your target industry"
   canonicalURL="https://onlineresumats.com/domain-converter"
+  keywords="resume domain converter, resume industry converter, fintech resume keywords, healthcare resume keywords, gaming resume, convert resume for new industry, career change resume tool, industry-specific resume"
 >
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
     <!-- Input -->
@@ -110,7 +111,6 @@ const domains = Object.entries(domainKeywords).map(([key, val]) => ({
   </div>
 
   <script>
-    import { parsePDF } from '../utils/pdfParser';
     import { convertResume } from '../utils/domainConverter';
 
     let selectedDomain = '';
@@ -149,6 +149,7 @@ const domains = Object.entries(domainKeywords).map(([key, val]) => ({
         status.textContent = 'Parsing...';
         status.className = 'mt-2 text-sm text-blue-600';
         try {
+          const { parsePDF } = await import('../utils/pdfParser');
           resumeText = await parsePDF(file);
           textArea.value = resumeText;
           status.textContent = '✓ Parsed';

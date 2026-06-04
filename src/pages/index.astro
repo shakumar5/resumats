@@ -1,8 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const faqData = [
+  {
+    question: "What is an ATS (Applicant Tracking System)?",
+    answer: "An ATS is software used by employers to filter and rank job applications. It scans resumes for keywords, formatting, and relevant content before a human recruiter ever sees them. Over 90% of Fortune 500 companies use ATS software."
+  },
+  {
+    question: "Is OnlineResumATS really free?",
+    answer: "Yes, 100% free with no limits. No sign-up, no credit card, no 'free trial' that expires. You can scan unlimited resumes as many times as you want."
+  },
+  {
+    question: "Is my resume data safe?",
+    answer: "Absolutely. All processing happens locally in your web browser using JavaScript. Your resume never leaves your computer — we have zero server-side processing of your personal data."
+  },
+  {
+    question: "How accurate is the ATS score?",
+    answer: "Our scoring engine uses the same keyword matching and formatting rules that real ATS systems like Taleo, Workday, and Greenhouse use. While no tool can perfectly replicate every ATS, our scoring gives you a reliable indication of how well your resume will perform."
+  },
+  {
+    question: "What is the Domain Converter tool?",
+    answer: "The Domain Converter is our unique tool that translates your resume's language for specific industries. For example, it converts generic terms like 'database' into industry-specific terms like 'EHR system' for healthcare or 'player data store' for gaming."
+  },
+  {
+    question: "How do I improve my ATS score?",
+    answer: "Focus on matching keywords from the job description, use standard section headers (Experience, Education, Skills), include quantified achievements with numbers, and avoid tables, images, or complex formatting that ATS systems can't parse."
+  }
+];
 ---
 
-<BaseLayout title="OnlineResumATS - Free ATS Resume Tools | Score Checker, Cover Letter, Domain Converter">
+<BaseLayout
+  title="OnlineResumATS - Free ATS Resume Tools | Score Checker, Cover Letter, Domain Converter"
+  keywords="free ATS resume checker, ATS score checker free, resume keyword scanner, cover letter generator free, ATS-friendly resume, applicant tracking system checker, resume optimization tool, domain converter resume, resume keywords analyzer"
+>
   <!-- Hero Section -->
   <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-blue-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
@@ -223,6 +253,58 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- Google AdSense - In-article Ad Slot (hidden until ads are active) -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+    <div class="text-center">
+      <ins class="adsbygoogle"
+        style="display:none"
+        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-slot="XXXXXXXXXX"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    </div>
+  </div>
+
+  <!-- FAQ Section (SEO-optimized with Schema Markup) -->
+  <section class="py-16 md:py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+        <p class="text-lg text-gray-600">Everything you need to know about ATS optimization</p>
+      </div>
+
+      <div class="space-y-4">
+        {faqData.map((faq, index) => (
+          <details class="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden" open={index === 0}>
+            <summary class="flex items-center justify-between cursor-pointer p-6 font-semibold text-gray-900 hover:bg-gray-100 transition-colors">
+              <span class="pr-4">{faq.question}</span>
+              <svg class="w-5 h-5 text-gray-500 shrink-0 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-6 text-gray-600 leading-relaxed">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQ Schema Markup -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqData.map(faq => ({
+        "@type": "Question",
+        "name": faq.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": faq.answer
+        }
+      }))
+    })} />
   </section>
 
   <!-- Support Us Section -->

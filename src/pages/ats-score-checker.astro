@@ -4,10 +4,11 @@ import ToolLayout from '../layouts/ToolLayout.astro';
 
 <ToolLayout
   title="Free ATS Score Checker - Check Resume ATS Compatibility | OnlineResumATS"
-  description="Free ATS resume score checker. Upload your resume and paste a job description to get instant ATS compatibility score, missing keywords, and improvement suggestions."
+  description="Free ATS resume score checker. Upload your resume and paste a job description to get instant ATS compatibility score, missing keywords, and improvement suggestions. No sign-up required."
   heading="ATS Score Checker"
   subheading="Upload your resume and paste the job description to see how well they match"
   canonicalURL="https://onlineresumats.com/ats-score-checker"
+  keywords="ATS score checker free, resume ATS compatibility, ATS resume scanner, check resume score, resume keyword match, applicant tracking system checker, free resume scanner, ATS-friendly resume check"
 >
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
     <!-- Input Section -->
@@ -137,7 +138,6 @@ import ToolLayout from '../layouts/ToolLayout.astro';
   </div>
 
   <script>
-    import { parsePDF } from '../utils/pdfParser';
     import { scoreResume } from '../utils/atsScorer';
 
     const uploadZone = document.getElementById('upload-zone') as HTMLElement;
@@ -180,6 +180,7 @@ import ToolLayout from '../layouts/ToolLayout.astro';
       resumeStatus.className = 'mt-2 text-sm text-blue-600';
 
       try {
+        const { parsePDF } = await import('../utils/pdfParser');
         resumeText = await parsePDF(file);
         resumeTextArea.value = resumeText;
         resumeStatus.textContent = `✓ Parsed successfully (${resumeText.split(/\s+/).length} words)`;

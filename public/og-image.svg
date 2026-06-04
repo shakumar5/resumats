@@ -1,0 +1,49 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eff6ff"/>
+      <stop offset="100%" style="stop-color:#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2563eb"/>
+      <stop offset="100%" style="stop-color:#3b82f6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  
+  <!-- Logo icon -->
+  <rect x="80" y="80" width="56" height="56" rx="12" fill="url(#accent)"/>
+  <path d="M98 96h20l8 8v24a4 4 0 01-4 4H98a4 4 0 01-4-4V100a4 4 0 014-4z" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M118 96v8h8" stroke="white" stroke-width="2" fill="none"/>
+  <path d="M100 112h16M100 118h16M100 124h10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Brand name -->
+  <text x="150" y="118" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="700" fill="#1e3a8a">OnlineResumATS</text>
+  
+  <!-- Main headline -->
+  <text x="80" y="260" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="800" fill="#111827">Beat the ATS.</text>
+  <text x="80" y="340" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="800" fill="#2563eb">Land More Interviews.</text>
+  
+  <!-- Subtext -->
+  <text x="80" y="410" font-family="Inter, system-ui, sans-serif" font-size="24" fill="#4b5563">Free ATS Resume Tools — Score Checker, Cover Letter Generator,</text>
+  <text x="80" y="445" font-family="Inter, system-ui, sans-serif" font-size="24" fill="#4b5563">Domain Converter &amp; Keyword Analyzer</text>
+  
+  <!-- Badges -->
+  <rect x="80" y="490" width="140" height="36" rx="18" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+  <text x="110" y="514" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#15803d">✓ 100% Free</text>
+  
+  <rect x="240" y="490" width="160" height="36" rx="18" fill="#dbeafe" stroke="#bfdbfe" stroke-width="1"/>
+  <text x="268" y="514" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#1d4ed8">🔒 Browser Only</text>
+  
+  <rect x="420" y="490" width="150" height="36" rx="18" fill="#f3e8ff" stroke="#e9d5ff" stroke-width="1"/>
+  <text x="448" y="514" font-family="Inter, system-ui, sans-serif" font-size="14" font-weight="600" fill="#7c3aed">⚡ No Sign-up</text>
+  
+  <!-- URL -->
+  <text x="80" y="580" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="500" fill="#6b7280">onlineresumats.com</text>
+  
+  <!-- Decorative circle -->
+  <circle cx="1050" cy="200" r="150" fill="#2563eb" opacity="0.08"/>
+  <circle cx="1100" cy="450" r="100" fill="#3b82f6" opacity="0.06"/>
+</svg>

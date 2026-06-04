@@ -5,10 +5,22 @@ interface Props {
   title: string;
   description?: string;
   canonicalURL?: string;
+  keywords?: string;
+  ogImage?: string;
+  articleDate?: string;
+  noindex?: boolean;
 }
 
-const { title, description = 'Free ATS resume tools - score checker, cover letter generator, domain converter & keyword analyzer. 100% free, no sign-up, complete privacy.', canonicalURL } = Astro.props;
+const {
+  title,
+  description = 'Free ATS resume tools - score checker, cover letter generator, domain converter & keyword analyzer. 100% free, no sign-up, complete privacy.',
+  canonicalURL,
+  keywords = 'ATS resume checker, free ATS score, resume keywords, cover letter generator, resume optimizer, applicant tracking system, job application tools, resume scanner, ATS-friendly resume, domain converter resume',
+  ogImage = '/og-image.svg',
+  noindex = false
+} = Astro.props;
 const siteURL = 'https://onlineresumats.com';
+const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
 ---
 
 <!DOCTYPE html>
@@ -17,24 +29,90 @@ const siteURL = 'https://onlineresumats.com';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href={canonicalURL || siteURL} />
+  <meta name="keywords" content={keywords} />
+  <meta name="author" content="OnlineResumATS" />
+  <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="canonical" href={currentURL} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
 
-  <!-- Open Graph -->
+  <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonicalURL || siteURL} />
+  <meta property="og:url" content={currentURL} />
   <meta property="og:site_name" content="OnlineResumATS" />
+  <meta property="og:image" content={`${siteURL}${ogImage}`} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={`${siteURL}${ogImage}`} />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "OnlineResumATS",
+    "url": siteURL,
+    "logo": `${siteURL}/favicon.svg`,
+    "description": "Free ATS resume optimization tools - no sign-up, complete privacy, browser-based processing.",
+    "sameAs": []
+  })} />
+
+  <!-- Structured Data - WebSite with SearchAction -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "OnlineResumATS",
+    "url": siteURL,
+    "description": description,
+    "publisher": {
+      "@type": "Organization",
+      "name": "OnlineResumATS"
+    }
+  })} />
+
+  <!-- Structured Data - BreadcrumbList -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": siteURL
+      },
+      ...(Astro.url.pathname !== '/' ? [{
+        "@type": "ListItem",
+        "position": 2,
+        "name": title.split(' - ')[0].split(' | ')[0],
+        "item": currentURL
+      }] : [])
+    ]
+  })} />
+
+  <!-- Google AdSense (loaded after page render) -->
+  <!-- Replace ca-pub-XXXXXXXXXXXXXXXX with your actual AdSense Publisher ID after approval -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <!-- Google Analytics (GA4) - loaded async, non-blocking -->
+  <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 
   <title>{title}</title>
 </head>
