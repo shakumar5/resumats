@@ -19,7 +19,7 @@ const {
   ogImage = '/og-image.svg',
   noindex = false
 } = Astro.props;
-const siteURL = 'https://onlineresumats.com';
+const siteURL = 'https://Online Resume ATS.com';
 const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
 ---
 
@@ -30,7 +30,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <meta name="keywords" content={keywords} />
-  <meta name="author" content="OnlineResumATS" />
+  <meta name="author" content="Online Resume ATS" />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <meta name="googlebot" content="index, follow" />
   <meta name="theme-color" content="#2563eb" />
@@ -43,7 +43,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={currentURL} />
-  <meta property="og:site_name" content="OnlineResumATS" />
+  <meta property="og:site_name" content="Online Resume ATS" />
   <meta property="og:image" content={`${siteURL}${ogImage}`} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -59,7 +59,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "OnlineResumATS",
+    "name": "Online Resume ATS",
     "url": siteURL,
     "logo": `${siteURL}/favicon.svg`,
     "description": "Free ATS resume optimization tools - no sign-up, complete privacy, browser-based processing.",
@@ -70,12 +70,12 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "OnlineResumATS",
+    "name": "Online Resume ATS",
     "url": siteURL,
     "description": description,
     "publisher": {
       "@type": "Organization",
-      "name": "OnlineResumATS"
+      "name": "Online Resume ATS"
     }
   })} />
 
@@ -125,7 +125,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
-          <span class="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">OnlineResumATS</span>
+          <span class="text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">Online Resume ATS</span>
         </a>
 
         <div class="hidden md:flex items-center gap-6">
@@ -169,7 +169,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <span class="text-xl font-bold">OnlineResumATS</span>
+            <span class="text-xl font-bold">Online Resume ATS</span>
           </div>
           <p class="text-gray-500 text-sm max-w-md">
             100% free ATS resume tools. No sign-up required, no data stored. All processing happens in your browser for complete privacy.
@@ -198,7 +198,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
       </div>
 
       <div class="border-t border-gray-100 mt-8 pt-8 text-center text-sm text-gray-400">
-        <p>&copy; {new Date().getFullYear()} OnlineResumATS. All rights reserved. Your data never leaves your browser.</p>
+        <p>&copy; {new Date().getFullYear()} Online Resume ATS. All rights reserved. Your data never leaves your browser.</p>
       </div>
     </div>
   </footer>

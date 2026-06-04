@@ -1,10 +1,8 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://onlineresumats.com/sitemap-index.xml
+Sitemap: https://onlineresumats.com/sitemap.xml
 
-# Crawl-delay (optional, be polite to other bots)
 User-agent: AhrefsBot
 Crawl-delay: 10
 
