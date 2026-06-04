@@ -36,7 +36,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta name="theme-color" content="#2563eb" />
   <link rel="canonical" href={currentURL} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="sitemap" href="/sitemap.xml" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -104,14 +104,13 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
   <!-- Google Analytics (GA4) - loaded async, non-blocking -->
-  <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-94DJ0GKP7W"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
+    gtag('config', 'G-94DJ0GKP7W');
   </script>
 
   <title>{title}</title>
