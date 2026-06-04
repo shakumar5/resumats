@@ -19,7 +19,7 @@ const {
   ogImage = '/og-image.svg',
   noindex = false
 } = Astro.props;
-const siteURL = 'https://Online Resume ATS.com';
+const siteURL = 'https://onlineresumats.com';
 const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
 ---
 
@@ -32,7 +32,14 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta name="keywords" content={keywords} />
   <meta name="author" content="Online Resume ATS" />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
-  <meta name="googlebot" content="index, follow" />
+  <meta name="googlebot" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+  <!-- Noindex non-canonical domains (workers.dev, pages.dev) -->
+  <script>
+    if(location.hostname.includes('workers.dev')||location.hostname.includes('pages.dev')){
+      document.querySelector('meta[name="robots"]').setAttribute('content','noindex, nofollow');
+      document.querySelector('meta[name="googlebot"]').setAttribute('content','noindex, nofollow');
+    }
+  </script>
   <meta name="theme-color" content="#2563eb" />
   <link rel="canonical" href={currentURL} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

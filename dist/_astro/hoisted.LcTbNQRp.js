@@ -1,1 +1,0 @@
-const n=document.getElementById("mobile-menu-btn"),t=document.getElementById("mobile-menu");n?.addEventListener("click",()=>{t?.classList.toggle("hidden")});window.dataLayer=window.dataLayer||[];function e(){dataLayer.push(arguments)}e("js",new Date);e("config","G-94DJ0GKP7W");

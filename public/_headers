@@ -1,0 +1,3 @@
+# Headers for Cloudflare Pages
+# The canonical domain (onlineresumats.com) gets normal indexing via meta tags in HTML
+# The workers.dev preview URL gets noindex via this header as a safety net

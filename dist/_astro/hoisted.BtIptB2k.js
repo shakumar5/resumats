@@ -1,5 +1,5 @@
 const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/pdfParser.DStAEUP2.js","_astro/ToolLayout.astro_astro_type_script_index_0_lang.bFhXMfK2.js"])))=>i.map(i=>d[i]);
-import{_ as v}from"./ToolLayout.astro_astro_type_script_index_0_lang.bFhXMfK2.js";import"./hoisted.LcTbNQRp.js";const b=[{id:"professional",name:"Professional Standard",description:"Classic professional cover letter suitable for most industries",tone:"professional",template:`Dear {{hiring_manager}},
+import{_ as v}from"./ToolLayout.astro_astro_type_script_index_0_lang.bFhXMfK2.js";import"./hoisted.COzg2ZH2.js";const b=[{id:"professional",name:"Professional Standard",description:"Classic professional cover letter suitable for most industries",tone:"professional",template:`Dear {{hiring_manager}},
 
 I am writing to express my strong interest in the {{job_title}} position at {{company_name}}. With {{years_experience}} years of experience in {{industry}}, I am confident in my ability to make a meaningful contribution to your team.
 
