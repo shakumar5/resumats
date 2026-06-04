@@ -1,0 +1,194 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Resume Keyword Analyzer - Extract & Optimize Keywords | OnlineResumATS"
+  description="Analyze your resume keywords. Find hard skills, soft skills, action verbs, and get suggestions for missing power words. Compare against job descriptions."
+  heading="Keyword Analyzer"
+  subheading="Extract, analyze, and optimize the keywords in your resume"
+  canonicalURL="https://onlineresumats.com/resume-keywords"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+    <!-- Input -->
+    <div class="space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Resume</h2>
+        <div id="kw-upload-zone" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-orange-400 hover:bg-orange-50 transition-all mb-3">
+          <p class="text-sm text-gray-600"><span class="text-orange-600 font-medium">Upload PDF</span> or paste below</p>
+          <input type="file" id="kw-resume-file" accept=".pdf" class="hidden" />
+        </div>
+        <textarea id="kw-resume-text" rows="10" placeholder="Paste your resume text here..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"></textarea>
+        <p id="kw-status" class="mt-2 text-sm hidden"></p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Job Description <span class="text-sm font-normal text-gray-400">(optional)</span></h2>
+        <textarea id="kw-job-desc" rows="6" placeholder="Paste a job description for comparison (optional)..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"></textarea>
+      </div>
+
+      <button id="kw-analyze-btn" class="w-full py-4 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-orange-200">
+        Analyze Keywords
+      </button>
+    </div>
+
+    <!-- Results -->
+    <div id="kw-results" class="space-y-6 hidden">
+      <!-- Score -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-semibold text-gray-900">Keyword Score</h2>
+          <span id="kw-score" class="text-3xl font-bold text-orange-500">0</span>
+        </div>
+        <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+          <div id="kw-score-bar" class="h-full bg-orange-500 rounded-full transition-all duration-700" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Hard Skills -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Hard Skills Found</h2>
+        <div id="kw-hard-skills" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Soft Skills -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Soft Skills Found</h2>
+        <div id="kw-soft-skills" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Action Verbs -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Action Verbs Used</h2>
+        <div id="kw-action-verbs" class="flex flex-wrap gap-2 mb-4"></div>
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Suggested Action Verbs to Add</h3>
+        <div id="kw-missing-verbs" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Industry Terms (if job desc provided) -->
+      <div id="kw-industry-section" class="bg-white rounded-2xl border border-gray-200 p-6 hidden">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Missing Industry Terms</h2>
+        <p class="text-xs text-gray-500 mb-3">These terms appear in the job description but not in your resume</p>
+        <div id="kw-industry-terms" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Overused Words -->
+      <div id="kw-overused-section" class="bg-white rounded-2xl border border-gray-200 p-6 hidden">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Overused Words</h2>
+        <p class="text-xs text-gray-500 mb-3">Consider using synonyms for variety</p>
+        <div id="kw-overused" class="flex flex-wrap gap-2"></div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">Suggestions</h2>
+        <ul id="kw-suggestions" class="space-y-2"></ul>
+      </div>
+    </div>
+
+    <!-- Placeholder -->
+    <div id="kw-placeholder" class="flex items-center justify-center">
+      <div class="text-center p-12 bg-white rounded-2xl border border-gray-200 w-full">
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+        </svg>
+        <h3 class="text-lg font-medium text-gray-500 mb-2">Keyword analysis will appear here</h3>
+        <p class="text-sm text-gray-400">Upload your resume to get started</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { parsePDF } from '../utils/pdfParser';
+    import { analyzeKeywords } from '../utils/keywordExtractor';
+
+    let resumeText = '';
+
+    // File upload
+    const uploadZone = document.getElementById('kw-upload-zone') as HTMLElement;
+    const fileInput = document.getElementById('kw-resume-file') as HTMLInputElement;
+    const textArea = document.getElementById('kw-resume-text') as HTMLTextAreaElement;
+    const status = document.getElementById('kw-status') as HTMLElement;
+
+    uploadZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (file) {
+        status.classList.remove('hidden');
+        status.textContent = 'Parsing...';
+        status.className = 'mt-2 text-sm text-blue-600';
+        try {
+          resumeText = await parsePDF(file);
+          textArea.value = resumeText;
+          status.textContent = '✓ Parsed';
+          status.className = 'mt-2 text-sm text-green-600';
+        } catch {
+          status.textContent = 'Error parsing PDF';
+          status.className = 'mt-2 text-sm text-red-600';
+        }
+      }
+    });
+
+    // Analyze
+    document.getElementById('kw-analyze-btn')!.addEventListener('click', () => {
+      const resume = textArea.value.trim() || resumeText;
+      if (!resume) {
+        alert('Please provide your resume text.');
+        return;
+      }
+
+      const jobDesc = (document.getElementById('kw-job-desc') as HTMLTextAreaElement).value.trim();
+      const results = analyzeKeywords(resume, jobDesc || undefined);
+
+      // Show results
+      document.getElementById('kw-placeholder')!.classList.add('hidden');
+      document.getElementById('kw-results')!.classList.remove('hidden');
+
+      // Score
+      document.getElementById('kw-score')!.textContent = String(results.score);
+      (document.getElementById('kw-score-bar') as HTMLElement).style.width = results.score + '%';
+
+      // Hard skills
+      document.getElementById('kw-hard-skills')!.innerHTML = results.hardSkills.length > 0
+        ? results.hardSkills.map(s => `<span class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs rounded-lg font-medium">${s}</span>`).join('')
+        : '<p class="text-sm text-gray-400">No hard skills detected. Add technical skills to your resume.</p>';
+
+      // Soft skills
+      document.getElementById('kw-soft-skills')!.innerHTML = results.softSkills.length > 0
+        ? results.softSkills.map(s => `<span class="px-3 py-1.5 bg-green-100 text-green-700 text-xs rounded-lg font-medium">${s}</span>`).join('')
+        : '<p class="text-sm text-gray-400">No soft skills detected. Add interpersonal skills.</p>';
+
+      // Action verbs
+      document.getElementById('kw-action-verbs')!.innerHTML = results.actionVerbsFound.length > 0
+        ? results.actionVerbsFound.map(v => `<span class="px-3 py-1.5 bg-orange-100 text-orange-700 text-xs rounded-lg font-medium">${v}</span>`).join('')
+        : '<p class="text-sm text-gray-400">No strong action verbs found.</p>';
+
+      document.getElementById('kw-missing-verbs')!.innerHTML = results.missingActionVerbs
+        .map(v => `<span class="px-3 py-1.5 bg-amber-50 text-amber-700 text-xs rounded-lg font-medium border border-amber-200">${v}</span>`).join('');
+
+      // Industry terms
+      if (results.industryTerms.length > 0) {
+        const section = document.getElementById('kw-industry-section') as HTMLElement;
+        section.classList.remove('hidden');
+        document.getElementById('kw-industry-terms')!.innerHTML = results.industryTerms
+          .map(t => `<span class="px-3 py-1.5 bg-red-100 text-red-700 text-xs rounded-lg font-medium">${t}</span>`).join('');
+      }
+
+      // Overused
+      if (results.overusedWords.length > 0) {
+        const section = document.getElementById('kw-overused-section') as HTMLElement;
+        section.classList.remove('hidden');
+        document.getElementById('kw-overused')!.innerHTML = results.overusedWords
+          .map(w => `<span class="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs rounded-lg font-medium">${w}</span>`).join('');
+      }
+
+      // Suggestions
+      document.getElementById('kw-suggestions')!.innerHTML = results.suggestions.map(s =>
+        `<li class="flex items-start gap-2 text-sm text-gray-600">
+          <svg class="w-4 h-4 text-orange-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+          ${s}
+        </li>`
+      ).join('');
+    });
+  </script>
+</ToolLayout>

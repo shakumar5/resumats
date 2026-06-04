@@ -1,0 +1,292 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Free ATS Score Checker - Check Resume ATS Compatibility | OnlineResumATS"
+  description="Free ATS resume score checker. Upload your resume and paste a job description to get instant ATS compatibility score, missing keywords, and improvement suggestions."
+  heading="ATS Score Checker"
+  subheading="Upload your resume and paste the job description to see how well they match"
+  canonicalURL="https://onlineresumats.com/ats-score-checker"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+    <!-- Input Section -->
+    <div class="space-y-6">
+      <!-- Resume Upload -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Resume</h2>
+
+        <div id="upload-zone" class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all">
+          <svg class="w-10 h-10 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+          <p class="text-sm text-gray-600 mb-1">Drop your PDF resume here or <span class="text-primary-600 font-medium">click to upload</span></p>
+          <p class="text-xs text-gray-400">PDF files only. Parsed locally in your browser.</p>
+          <input type="file" id="resume-file" accept=".pdf" class="hidden" />
+        </div>
+
+        <div class="mt-4">
+          <div class="flex items-center gap-2 mb-2">
+            <div class="h-px flex-1 bg-gray-200"></div>
+            <span class="text-xs text-gray-400 uppercase">or paste text</span>
+            <div class="h-px flex-1 bg-gray-200"></div>
+          </div>
+          <textarea
+            id="resume-text"
+            rows="8"
+            placeholder="Paste your resume text here..."
+            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
+          ></textarea>
+        </div>
+        <p id="resume-status" class="mt-2 text-sm text-gray-500 hidden"></p>
+      </div>
+
+      <!-- Job Description -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Job Description</h2>
+        <textarea
+          id="job-description"
+          rows="10"
+          placeholder="Paste the job description here..."
+          class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
+        ></textarea>
+      </div>
+
+      <button
+        id="analyze-btn"
+        class="w-full py-4 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Analyze My Resume
+      </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results-section" class="space-y-6 hidden">
+      <!-- Score Card -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">ATS Score</h2>
+        <div class="flex items-center justify-center mb-6">
+          <div class="relative w-40 h-40">
+            <svg class="w-40 h-40 transform -rotate-90" viewBox="0 0 160 160">
+              <circle cx="80" cy="80" r="70" stroke="#e5e7eb" stroke-width="12" fill="none" />
+              <circle id="score-circle" cx="80" cy="80" r="70" stroke="#3b82f6" stroke-width="12" fill="none"
+                stroke-dasharray="439.82" stroke-dashoffset="439.82" stroke-linecap="round" class="transition-all duration-1000" />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="score-number" class="text-4xl font-bold text-gray-900">0</span>
+              <span class="text-sm text-gray-500">/ 100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-scores -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="text-center p-3 bg-blue-50 rounded-xl">
+            <div id="keyword-score" class="text-xl font-bold text-blue-600">0%</div>
+            <div class="text-xs text-gray-500">Keywords</div>
+          </div>
+          <div class="text-center p-3 bg-green-50 rounded-xl">
+            <div id="format-score" class="text-xl font-bold text-green-600">0%</div>
+            <div class="text-xs text-gray-500">Format</div>
+          </div>
+          <div class="text-center p-3 bg-purple-50 rounded-xl">
+            <div id="content-score" class="text-xl font-bold text-purple-600">0%</div>
+            <div class="text-xs text-gray-500">Content</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Keywords -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Keywords</h2>
+
+        <div class="mb-4">
+          <h3 class="text-sm font-medium text-green-700 mb-2">Matched Keywords</h3>
+          <div id="matched-keywords" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-red-700 mb-2">Missing Keywords</h3>
+          <div id="missing-keywords" class="flex flex-wrap gap-2"></div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Suggestions</h2>
+        <ul id="suggestions-list" class="space-y-3"></ul>
+      </div>
+
+      <!-- Detailed Results -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Detailed Analysis</h2>
+        <div id="detailed-results" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <!-- Placeholder when no results -->
+    <div id="placeholder-section" class="flex items-center justify-center">
+      <div class="text-center p-12 bg-white rounded-2xl border border-gray-200 w-full">
+        <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <h3 class="text-lg font-medium text-gray-500 mb-2">Your results will appear here</h3>
+        <p class="text-sm text-gray-400">Upload your resume and paste a job description, then click "Analyze"</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { parsePDF } from '../utils/pdfParser';
+    import { scoreResume } from '../utils/atsScorer';
+
+    const uploadZone = document.getElementById('upload-zone') as HTMLElement;
+    const fileInput = document.getElementById('resume-file') as HTMLInputElement;
+    const resumeTextArea = document.getElementById('resume-text') as HTMLTextAreaElement;
+    const jobDescArea = document.getElementById('job-description') as HTMLTextAreaElement;
+    const analyzeBtn = document.getElementById('analyze-btn') as HTMLButtonElement;
+    const resultsSection = document.getElementById('results-section') as HTMLElement;
+    const placeholderSection = document.getElementById('placeholder-section') as HTMLElement;
+    const resumeStatus = document.getElementById('resume-status') as HTMLElement;
+
+    let resumeText = '';
+
+    // File upload handling
+    uploadZone.addEventListener('click', () => fileInput.click());
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('border-primary-400', 'bg-primary-50');
+    });
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('border-primary-400', 'bg-primary-50');
+    });
+    uploadZone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('border-primary-400', 'bg-primary-50');
+      const file = e.dataTransfer?.files[0];
+      if (file && file.type === 'application/pdf') {
+        await handleFile(file);
+      }
+    });
+
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files?.[0];
+      if (file) await handleFile(file);
+    });
+
+    async function handleFile(file: File) {
+      resumeStatus.classList.remove('hidden');
+      resumeStatus.textContent = 'Parsing PDF...';
+      resumeStatus.className = 'mt-2 text-sm text-blue-600';
+
+      try {
+        resumeText = await parsePDF(file);
+        resumeTextArea.value = resumeText;
+        resumeStatus.textContent = `✓ Parsed successfully (${resumeText.split(/\s+/).length} words)`;
+        resumeStatus.className = 'mt-2 text-sm text-green-600';
+      } catch (err) {
+        resumeStatus.textContent = 'Error parsing PDF. Try pasting text instead.';
+        resumeStatus.className = 'mt-2 text-sm text-red-600';
+      }
+    }
+
+    // Analyze button
+    analyzeBtn.addEventListener('click', () => {
+      const resume = resumeTextArea.value.trim() || resumeText;
+      const jobDesc = jobDescArea.value.trim();
+
+      if (!resume) {
+        alert('Please upload a resume or paste resume text.');
+        return;
+      }
+      if (!jobDesc) {
+        alert('Please paste the job description.');
+        return;
+      }
+
+      const results = scoreResume(resume, jobDesc);
+      displayResults(results);
+    });
+
+    function displayResults(results: ReturnType<typeof scoreResume>) {
+      placeholderSection.classList.add('hidden');
+      resultsSection.classList.remove('hidden');
+
+      // Animate score circle
+      const circle = document.getElementById('score-circle') as SVGCircleElement;
+      const circumference = 2 * Math.PI * 70;
+      const offset = circumference - (results.overallScore / 100) * circumference;
+      circle.style.strokeDashoffset = String(offset);
+
+      // Color based on score
+      if (results.overallScore >= 75) {
+        circle.style.stroke = '#22c55e';
+      } else if (results.overallScore >= 50) {
+        circle.style.stroke = '#f59e0b';
+      } else {
+        circle.style.stroke = '#ef4444';
+      }
+
+      // Animate number
+      animateNumber('score-number', results.overallScore);
+
+      // Sub-scores
+      document.getElementById('keyword-score')!.textContent = results.keywordScore + '%';
+      document.getElementById('format-score')!.textContent = results.formatScore + '%';
+      document.getElementById('content-score')!.textContent = results.contentScore + '%';
+
+      // Keywords
+      const matchedDiv = document.getElementById('matched-keywords')!;
+      matchedDiv.innerHTML = results.matchedKeywords.slice(0, 20).map(kw =>
+        `<span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-lg font-medium">${kw}</span>`
+      ).join('');
+
+      const missingDiv = document.getElementById('missing-keywords')!;
+      missingDiv.innerHTML = results.missingKeywords.slice(0, 15).map(kw =>
+        `<span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-lg font-medium">${kw}</span>`
+      ).join('');
+
+      // Suggestions
+      const sugList = document.getElementById('suggestions-list')!;
+      sugList.innerHTML = results.suggestions.map(s =>
+        `<li class="flex items-start gap-2">
+          <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+          <span class="text-sm text-gray-700">${s}</span>
+        </li>`
+      ).join('');
+
+      // Detailed results
+      const detailedDiv = document.getElementById('detailed-results')!;
+      detailedDiv.innerHTML = results.detailedResults.map(r =>
+        `<div class="flex items-center justify-between p-3 rounded-lg ${r.passed ? 'bg-green-50' : 'bg-red-50'}">
+          <div class="flex items-center gap-2">
+            <span class="${r.passed ? 'text-green-600' : 'text-red-600'}">
+              ${r.passed
+                ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>'
+                : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>'
+              }
+            </span>
+            <span class="text-sm font-medium text-gray-700">${r.name}</span>
+          </div>
+          <span class="text-xs text-gray-500">${r.score}/${r.maxScore}</span>
+        </div>`
+      ).join('');
+    }
+
+    function animateNumber(elementId: string, target: number) {
+      const el = document.getElementById(elementId)!;
+      let current = 0;
+      const increment = target / 30;
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = String(Math.round(current));
+      }, 30);
+    }
+  </script>
+</ToolLayout>

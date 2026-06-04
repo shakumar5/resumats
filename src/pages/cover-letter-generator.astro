@@ -1,0 +1,220 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Free Cover Letter Generator - Create Professional Cover Letters | OnlineResumATS"
+  description="Generate professional cover letters from your resume. Choose from 5 templates for technical, creative, executive, career change, and standard roles. 100% free."
+  heading="Cover Letter Generator"
+  subheading="Generate a tailored cover letter from your resume and the job description"
+  canonicalURL="https://onlineresumats.com/cover-letter-generator"
+>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+    <!-- Input Section -->
+    <div class="space-y-6">
+      <!-- Template Selection -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Choose Template</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="template-grid">
+          <button data-template="professional" class="template-btn active-template p-4 border-2 border-primary-500 rounded-xl text-left hover:border-primary-400 transition-all bg-primary-50">
+            <span class="text-sm font-bold text-gray-900">Professional</span>
+            <p class="text-xs text-gray-500 mt-1">Classic format for most roles</p>
+          </button>
+          <button data-template="technical" class="template-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:border-primary-400 transition-all">
+            <span class="text-sm font-bold text-gray-900">Technical</span>
+            <p class="text-xs text-gray-500 mt-1">Engineering & dev focus</p>
+          </button>
+          <button data-template="creative" class="template-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:border-primary-400 transition-all">
+            <span class="text-sm font-bold text-gray-900">Creative</span>
+            <p class="text-xs text-gray-500 mt-1">Marketing & design roles</p>
+          </button>
+          <button data-template="executive" class="template-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:border-primary-400 transition-all">
+            <span class="text-sm font-bold text-gray-900">Executive</span>
+            <p class="text-xs text-gray-500 mt-1">Leadership positions</p>
+          </button>
+          <button data-template="career_change" class="template-btn p-4 border-2 border-gray-200 rounded-xl text-left hover:border-primary-400 transition-all sm:col-span-2">
+            <span class="text-sm font-bold text-gray-900">Career Change</span>
+            <p class="text-xs text-gray-500 mt-1">Transitioning industries</p>
+          </button>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Details</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+            <input type="text" id="full-name" placeholder="John Smith" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Hiring Manager</label>
+            <input type="text" id="hiring-manager" placeholder="Hiring Manager" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+            <input type="text" id="company-name" placeholder="Acme Corp" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
+            <input type="text" id="job-title" placeholder="Senior Developer" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Resume Input -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Resume</h2>
+        <div id="cl-upload-zone" class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-primary-400 hover:bg-primary-50 transition-all mb-3">
+          <p class="text-sm text-gray-600"><span class="text-primary-600 font-medium">Upload PDF</span> or paste below</p>
+          <input type="file" id="cl-resume-file" accept=".pdf" class="hidden" />
+        </div>
+        <textarea id="cl-resume-text" rows="6" placeholder="Paste your resume text here..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"></textarea>
+        <p id="cl-resume-status" class="mt-2 text-sm hidden"></p>
+      </div>
+
+      <!-- Job Description -->
+      <div class="bg-white rounded-2xl border border-gray-200 p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Job Description</h2>
+        <textarea id="cl-job-description" rows="6" placeholder="Paste the job description here..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"></textarea>
+      </div>
+
+      <button id="generate-btn" class="w-full py-4 bg-accent-600 text-white font-semibold rounded-xl hover:bg-accent-700 transition-all shadow-lg shadow-accent-200">
+        Generate Cover Letter
+      </button>
+    </div>
+
+    <!-- Output Section -->
+    <div class="space-y-6">
+      <div class="bg-white rounded-2xl border border-gray-200 p-6 min-h-[400px]">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Generated Cover Letter</h2>
+          <button id="copy-btn" class="hidden px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors">
+            Copy
+          </button>
+        </div>
+
+        <div id="cl-output" class="prose prose-sm max-w-none">
+          <div class="text-center py-16 text-gray-400">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <p>Your cover letter will appear here</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div id="cl-suggestions" class="bg-white rounded-2xl border border-gray-200 p-6 hidden">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Tips</h2>
+        <ul id="cl-suggestions-list" class="space-y-2"></ul>
+      </div>
+
+      <!-- Word Count -->
+      <div id="cl-stats" class="bg-white rounded-2xl border border-gray-200 p-4 hidden">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-gray-500">Word count:</span>
+          <span id="cl-word-count" class="font-medium text-gray-900">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { parsePDF } from '../utils/pdfParser';
+    import { generateCoverLetterFromInputs } from '../utils/coverLetterGen';
+
+    let selectedTemplate = 'professional';
+    let resumeText = '';
+
+    // Template selection
+    document.querySelectorAll('.template-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.template-btn').forEach(b => {
+          b.classList.remove('active-template', 'border-primary-500', 'bg-primary-50');
+          b.classList.add('border-gray-200');
+        });
+        btn.classList.add('active-template', 'border-primary-500', 'bg-primary-50');
+        btn.classList.remove('border-gray-200');
+        selectedTemplate = (btn as HTMLElement).dataset.template || 'professional';
+      });
+    });
+
+    // File upload
+    const clUploadZone = document.getElementById('cl-upload-zone') as HTMLElement;
+    const clFileInput = document.getElementById('cl-resume-file') as HTMLInputElement;
+    const clResumeText = document.getElementById('cl-resume-text') as HTMLTextAreaElement;
+    const clStatus = document.getElementById('cl-resume-status') as HTMLElement;
+
+    clUploadZone.addEventListener('click', () => clFileInput.click());
+    clFileInput.addEventListener('change', async () => {
+      const file = clFileInput.files?.[0];
+      if (file) {
+        clStatus.classList.remove('hidden');
+        clStatus.textContent = 'Parsing...';
+        clStatus.className = 'mt-2 text-sm text-blue-600';
+        try {
+          resumeText = await parsePDF(file);
+          clResumeText.value = resumeText;
+          clStatus.textContent = '✓ Parsed successfully';
+          clStatus.className = 'mt-2 text-sm text-green-600';
+        } catch {
+          clStatus.textContent = 'Error parsing PDF';
+          clStatus.className = 'mt-2 text-sm text-red-600';
+        }
+      }
+    });
+
+    // Generate
+    const generateBtn = document.getElementById('generate-btn') as HTMLButtonElement;
+    generateBtn.addEventListener('click', () => {
+      const resume = clResumeText.value.trim() || resumeText;
+      const jobDesc = (document.getElementById('cl-job-description') as HTMLTextAreaElement).value.trim();
+
+      if (!resume) {
+        alert('Please provide your resume text.');
+        return;
+      }
+
+      const result = generateCoverLetterFromInputs({
+        resumeText: resume,
+        jobDescription: jobDesc,
+        templateId: selectedTemplate,
+        fullName: (document.getElementById('full-name') as HTMLInputElement).value,
+        hiringManager: (document.getElementById('hiring-manager') as HTMLInputElement).value,
+        companyName: (document.getElementById('company-name') as HTMLInputElement).value,
+        jobTitle: (document.getElementById('job-title') as HTMLInputElement).value,
+      });
+
+      // Display result
+      const output = document.getElementById('cl-output') as HTMLElement;
+      output.innerHTML = `<pre class="whitespace-pre-wrap font-sans text-sm text-gray-800 leading-relaxed">${result.letter}</pre>`;
+
+      // Show copy button
+      const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
+      copyBtn.classList.remove('hidden');
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(result.letter);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+      };
+
+      // Stats
+      const statsDiv = document.getElementById('cl-stats') as HTMLElement;
+      statsDiv.classList.remove('hidden');
+      document.getElementById('cl-word-count')!.textContent = String(result.wordCount);
+
+      // Suggestions
+      if (result.suggestions.length > 0) {
+        const sugDiv = document.getElementById('cl-suggestions') as HTMLElement;
+        sugDiv.classList.remove('hidden');
+        document.getElementById('cl-suggestions-list')!.innerHTML = result.suggestions.map(s =>
+          `<li class="flex items-start gap-2 text-sm text-gray-600">
+            <svg class="w-4 h-4 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+            ${s}
+          </li>`
+        ).join('');
+      }
+    });
+  </script>
+</ToolLayout>
