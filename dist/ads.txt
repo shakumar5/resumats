@@ -1,2 +1,1 @@
-# Replace ca-pub-XXXXXXXXXXXXXXXX with your actual Google AdSense Publisher ID
 google.com, pub-9843041963430696, DIRECT, f08c47fec0942fa0

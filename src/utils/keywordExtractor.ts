@@ -165,7 +165,7 @@ export function analyzeKeywords(resumeText: string, jobDescription?: string): Ke
     missingActionVerbs: missingActionVerbs.slice(0, 10),
     industryTerms,
     overusedWords,
-    keywordDensity: wordFreq,
+    keywordDensity,
     suggestions,
     score
   };

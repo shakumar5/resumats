@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { title, description, heading, subheading, canonicalURL, keywords } = Astro.props;
-const siteURL = 'https://Online Resume ATS.com';
+const siteURL = 'https://onlineresumats.com';
 ---
 
 <BaseLayout title={title} description={description} canonicalURL={canonicalURL} keywords={keywords}>
@@ -69,13 +69,6 @@ const siteURL = 'https://Online Resume ATS.com';
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "2150",
-      "bestRating": "5",
-      "worstRating": "1"
     }
   })} />
 

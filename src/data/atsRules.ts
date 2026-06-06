@@ -170,9 +170,9 @@ export const atsRules: ATSRule[] = [
     weight: 5,
     check: (text: string) => {
       const datePatterns = [
-        /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{4}/gi,
-        /\b\d{1,2}\/\d{4}/g,
-        /\b\d{4}\s*[-–]\s*(Present|\d{4})/gi
+        /\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+\d{4}/i,
+        /\b\d{1,2}\/\d{4}/,
+        /\b\d{4}\s*[-–]\s*(Present|\d{4})/i
       ];
       const hasAnyDates = datePatterns.some(p => p.test(text));
       return {
