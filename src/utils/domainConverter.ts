@@ -5,6 +5,7 @@
  */
 
 import { domainKeywords, type DomainMapping } from '../data/domainKeywords';
+import { sanitizeInput, isValidInput, escapeRegex, VALIDATION_CONSTRAINTS } from './constants';
 
 export interface ConversionResult {
   originalText: string;
@@ -155,28 +156,26 @@ const GENERIC_TERM_MAPPINGS: Record<string, Record<string, string>> = {
 };
 
 export function convertResume(resumeText: string, targetDomain: string): ConversionResult {
+  // Validate input
+  const sanitizedResume = sanitizeInput(resumeText);
+  if (!isValidInput(sanitizedResume, VALIDATION_CONSTRAINTS.MIN_RESUME_LENGTH)) {
+    return createDefaultResult('Resume must have at least 50 characters');
+  }
+
+  // Validate domain exists
   const domain = domainKeywords[targetDomain];
   if (!domain) {
-    return {
-      originalText: resumeText,
-      convertedText: resumeText,
-      suggestedKeywords: [],
-      suggestedSkills: [],
-      suggestedCertifications: [],
-      suggestedActionVerbs: [],
-      changes: [],
-      domainFitScore: 0
-    };
+    return createDefaultResult(`Domain "${targetDomain}" is not supported. Please select a valid domain.`);
   }
 
   const mappings = GENERIC_TERM_MAPPINGS[targetDomain] || {};
   const changes: ConversionResult['changes'] = [];
-  let convertedText = resumeText;
+  let convertedText = sanitizedResume;
 
   // Apply term mappings
   for (const [generic, specific] of Object.entries(mappings)) {
     const regex = new RegExp(`\\b${escapeRegex(generic)}\\b`, 'gi');
-    if (regex.test(resumeText)) {
+    if (regex.test(sanitizedResume)) {
       convertedText = convertedText.replace(regex, specific);
       changes.push({
         original: generic,
@@ -187,7 +186,7 @@ export function convertResume(resumeText: string, targetDomain: string): Convers
   }
 
   // Find keywords from domain that are missing from resume
-  const resumeLower = resumeText.toLowerCase();
+  const resumeLower = sanitizedResume.toLowerCase();
   const missingKeywords = domain.keywords.filter(kw =>
     !resumeLower.includes(kw.toLowerCase())
   );
@@ -207,7 +206,7 @@ export function convertResume(resumeText: string, targetDomain: string): Convers
   );
 
   return {
-    originalText: resumeText,
+    originalText: sanitizedResume,
     convertedText,
     suggestedKeywords: missingKeywords.slice(0, 15),
     suggestedSkills: missingSkills.slice(0, 10),
@@ -218,8 +217,20 @@ export function convertResume(resumeText: string, targetDomain: string): Convers
   };
 }
 
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/**
+ * Creates a default error result when validation fails
+ */
+function createDefaultResult(message: string): ConversionResult {
+  return {
+    originalText: '',
+    convertedText: '',
+    suggestedKeywords: [],
+    suggestedSkills: [],
+    suggestedCertifications: [],
+    suggestedActionVerbs: [],
+    changes: [],
+    domainFitScore: 0
+  };
 }
 
 export function getDomainSuggestions(targetDomain: string): DomainMapping | null {

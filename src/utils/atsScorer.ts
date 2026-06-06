@@ -5,6 +5,13 @@
  */
 
 import { calculateATSScore } from '../data/atsRules';
+import { 
+  COMMON_STOP_WORDS, 
+  ATS_SCORE_WEIGHTS, 
+  VALIDATION_CONSTRAINTS, 
+  sanitizeInput, 
+  isValidInput 
+} from './constants';
 
 export interface ATSResult {
   overallScore: number;
@@ -25,35 +32,45 @@ export interface ATSResult {
 }
 
 export function scoreResume(resumeText: string, jobDescription: string): ATSResult {
+  // Validate inputs
+  const sanitizedResume = sanitizeInput(resumeText);
+  const sanitizedJobDesc = sanitizeInput(jobDescription);
+
+  if (!isValidInput(sanitizedResume) || !isValidInput(sanitizedJobDesc, VALIDATION_CONSTRAINTS.MIN_JOB_DESCRIPTION_LENGTH)) {
+    return createDefaultResult('Resume and job description must have at least 50 characters each.');
+  }
+
   // Get base ATS score from rules
-  const baseResults = calculateATSScore(resumeText);
+  const baseResults = calculateATSScore(sanitizedResume);
 
   // Calculate keyword matching
-  const keywordResult = calculateKeywordMatch(resumeText, jobDescription);
+  const keywordResult = calculateKeywordMatch(sanitizedResume, sanitizedJobDesc);
 
-  // Calculate category scores
+  // Calculate category scores with division by zero protection
   const formatResults = baseResults.results.filter(r => r.rule.category === 'Format' || r.rule.category === 'ATS Compatibility');
   const contentResults = baseResults.results.filter(r => r.rule.category === 'Content');
 
-  const formatScore = Math.round(
-    (formatResults.reduce((sum, r) => sum + r.result.score, 0) /
-      formatResults.reduce((sum, r) => sum + r.rule.weight, 0)) * 100
-  );
+  // Safely calculate format score (prevent division by zero)
+  const formatTotalWeight = formatResults.reduce((sum, r) => sum + r.rule.weight, 0);
+  const formatScore = formatTotalWeight > 0
+    ? Math.round((formatResults.reduce((sum, r) => sum + r.result.score, 0) / formatTotalWeight) * 100)
+    : 50; // Default to 50 if no format rules
 
-  const contentScore = Math.round(
-    (contentResults.reduce((sum, r) => sum + r.result.score, 0) /
-      contentResults.reduce((sum, r) => sum + r.rule.weight, 0)) * 100
-  );
+  // Safely calculate content score (prevent division by zero)
+  const contentTotalWeight = contentResults.reduce((sum, r) => sum + r.rule.weight, 0);
+  const contentScore = contentTotalWeight > 0
+    ? Math.round((contentResults.reduce((sum, r) => sum + r.result.score, 0) / contentTotalWeight) * 100)
+    : 50; // Default to 50 if no content rules
 
-  // Overall score is weighted combination
+  // Overall score is weighted combination using constants
   const overallScore = Math.round(
-    keywordResult.score * 0.45 +
-    formatScore * 0.25 +
-    contentScore * 0.30
+    keywordResult.score * ATS_SCORE_WEIGHTS.KEYWORD_MATCH +
+    formatScore * ATS_SCORE_WEIGHTS.FORMAT +
+    contentScore * ATS_SCORE_WEIGHTS.CONTENT
   );
 
   // Generate suggestions
-  const suggestions = generateSuggestions(baseResults, keywordResult, resumeText);
+  const suggestions = generateSuggestions(baseResults, keywordResult, sanitizedResume);
 
   const detailedResults = baseResults.results.map(r => ({
     category: r.rule.category,
@@ -83,6 +100,22 @@ export function scoreResume(resumeText: string, jobDescription: string): ATSResu
     missingKeywords: keywordResult.missingKeywords,
     suggestions,
     detailedResults
+  };
+}
+
+/**
+ * Creates a default error result when validation fails
+ */
+function createDefaultResult(feedback: string): ATSResult {
+  return {
+    overallScore: 0,
+    keywordScore: 0,
+    formatScore: 0,
+    contentScore: 0,
+    matchedKeywords: [],
+    missingKeywords: [],
+    suggestions: [feedback],
+    detailedResults: []
   };
 }
 
@@ -117,52 +150,39 @@ function calculateKeywordMatch(resumeText: string, jobDescription: string): Keyw
 }
 
 function extractKeywords(text: string): string[] {
-  // Common stop words to ignore
-  const stopWords = new Set([
-    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for',
-    'of', 'with', 'by', 'from', 'is', 'are', 'was', 'were', 'be', 'been',
-    'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would',
-    'could', 'should', 'may', 'might', 'shall', 'can', 'need', 'must',
-    'this', 'that', 'these', 'those', 'it', 'its', 'we', 'you', 'your',
-    'our', 'their', 'who', 'which', 'what', 'where', 'when', 'how',
-    'all', 'each', 'every', 'both', 'few', 'more', 'most', 'other',
-    'some', 'such', 'no', 'not', 'only', 'same', 'so', 'than', 'too',
-    'very', 'just', 'about', 'above', 'after', 'again', 'also', 'any',
-    'because', 'before', 'between', 'during', 'into', 'through',
-    'ability', 'able', 'experience', 'work', 'working', 'team', 'role',
-    'position', 'company', 'looking', 'seeking', 'required', 'preferred',
-    'including', 'within', 'across', 'strong', 'excellent', 'good'
-  ]);
-
-  const words = text.toLowerCase()
+  // Use shared stop words constant and perform lowercase once
+  const textLower = text.toLowerCase();
+  
+  // First pass: extract and clean words
+  const words = textLower
     .replace(/[^a-z0-9\s\-\+\#\.\/]/g, ' ')
     .split(/\s+/)
-    .filter(w => w.length > 2 && !stopWords.has(w));
+    .filter(w => w.length > 2 && !COMMON_STOP_WORDS.has(w));
 
-  // Extract single words and common bigrams
+  // Count word frequencies
   const wordFreq: Record<string, number> = {};
   for (const word of words) {
     wordFreq[word] = (wordFreq[word] || 0) + 1;
   }
 
-  // Extract bigrams (two-word phrases)
-  const cleanWords = text.toLowerCase()
+  // Extract bigrams (two-word phrases) - reuse already-split words
+  const cleanWords = textLower
     .replace(/[^a-z0-9\s\-\+\#\.\/]/g, ' ')
     .split(/\s+/)
     .filter(w => w.length > 1);
 
   for (let i = 0; i < cleanWords.length - 1; i++) {
-    if (!stopWords.has(cleanWords[i]) && !stopWords.has(cleanWords[i + 1])) {
+    if (!COMMON_STOP_WORDS.has(cleanWords[i]) && !COMMON_STOP_WORDS.has(cleanWords[i + 1])) {
       const bigram = `${cleanWords[i]} ${cleanWords[i + 1]}`;
       wordFreq[bigram] = (wordFreq[bigram] || 0) + 1;
     }
   }
 
-  // Sort by frequency and return top keywords
+  // Sort by frequency and return top keywords (limited to constant)
   const sorted = Object.entries(wordFreq)
     .filter(([word, freq]) => freq >= 1 && word.length > 2)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 40)
+    .slice(0, VALIDATION_CONSTRAINTS.MAX_KEYWORDS_TO_SHOW)
     .map(([word]) => word);
 
   return sorted;
@@ -207,5 +227,5 @@ function generateSuggestions(
     suggestions.push('Reduce first-person pronouns ("I"). Use action verbs at the start of bullet points instead.');
   }
 
-  return suggestions.slice(0, 8); // Limit to 8 suggestions
+  return suggestions.slice(0, VALIDATION_CONSTRAINTS.MAX_SUGGESTIONS); // Use constant
 }

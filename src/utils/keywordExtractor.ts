@@ -4,6 +4,12 @@
  */
 
 import { actionVerbs, getAllVerbs } from '../data/actionVerbs';
+import { 
+  COMMON_STOP_WORDS, 
+  VALIDATION_CONSTRAINTS, 
+  sanitizeInput, 
+  isValidInput 
+} from './constants';
 
 export interface KeywordAnalysis {
   hardSkills: string[];
@@ -41,8 +47,31 @@ const TECH_SKILLS_PATTERNS = [
   /\b(agile|scrum|kanban|devops|tdd|bdd|ci\/cd|microservices|rest|graphql|api)\b/gi,
 ];
 
+/**
+ * Creates a default analysis result when validation fails
+ */
+function createDefaultAnalysis(message: string): KeywordAnalysis {
+  return {
+    hardSkills: [],
+    softSkills: [],
+    actionVerbsFound: [],
+    missingActionVerbs: [],
+    industryTerms: [],
+    overusedWords: [],
+    keywordDensity: {},
+    suggestions: [message],
+    score: 0
+  };
+}
+
 export function analyzeKeywords(resumeText: string, jobDescription?: string): KeywordAnalysis {
-  const resumeLower = resumeText.toLowerCase();
+  // Validate input
+  const sanitizedResume = sanitizeInput(resumeText);
+  if (!isValidInput(sanitizedResume, VALIDATION_CONSTRAINTS.MIN_RESUME_LENGTH)) {
+    return createDefaultAnalysis('Resume must have at least 50 characters');
+  }
+
+  const resumeLower = sanitizedResume.toLowerCase();
   const allActionVerbs = getAllVerbs();
 
   // Find action verbs used
@@ -71,16 +100,24 @@ export function analyzeKeywords(resumeText: string, jobDescription?: string): Ke
   // Find soft skills
   const softSkills = SOFT_SKILLS.filter(skill => resumeLower.includes(skill));
 
-  // Calculate keyword density
+  // Calculate keyword density (limited to prevent memory issues)
   const words = resumeLower.split(/\s+/);
   const wordFreq: Record<string, number> = {};
-  const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'this', 'that', 'it', 'i', 'my', 'me', 'we', 'our', 'you', 'your']);
 
   for (const word of words) {
-    if (word.length > 3 && !stopWords.has(word)) {
+    if (word.length > 3 && !COMMON_STOP_WORDS.has(word)) {
       wordFreq[word] = (wordFreq[word] || 0) + 1;
     }
   }
+
+  // Limit keywordDensity output to top entries to prevent memory bloat
+  const keywordDensity = Object.entries(wordFreq)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, VALIDATION_CONSTRAINTS.MAX_KEYWORD_DENSITY_ENTRIES)
+    .reduce((acc, [word, freq]) => {
+      acc[word] = freq;
+      return acc;
+    }, {} as Record<string, number>);
 
   // Find overused words (appearing more than 5 times)
   const overusedWords = Object.entries(wordFreq)
@@ -92,10 +129,11 @@ export function analyzeKeywords(resumeText: string, jobDescription?: string): Ke
   // Industry terms (words that appear in job description but not common)
   const industryTerms: string[] = [];
   if (jobDescription) {
-    const jdWords = jobDescription.toLowerCase().split(/\s+/);
+    const sanitizedJobDesc = sanitizeInput(jobDescription);
+    const jdWords = sanitizedJobDesc.toLowerCase().split(/\s+/);
     const jdFreq: Record<string, number> = {};
     for (const word of jdWords) {
-      if (word.length > 3 && !stopWords.has(word)) {
+      if (word.length > 3 && !COMMON_STOP_WORDS.has(word)) {
         jdFreq[word] = (jdFreq[word] || 0) + 1;
       }
     }

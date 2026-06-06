@@ -5,6 +5,12 @@
  */
 
 import { coverLetterTemplates, generateCoverLetter, type CoverLetterData } from '../data/coverLetterTemplates';
+import { 
+  INDUSTRY_KEYWORDS, 
+  VALIDATION_CONSTRAINTS, 
+  sanitizeInput, 
+  isValidInput 
+} from './constants';
 
 export interface CoverLetterInput {
   resumeText: string;
@@ -24,9 +30,26 @@ export interface CoverLetterOutput {
 }
 
 export function generateCoverLetterFromInputs(input: CoverLetterInput): CoverLetterOutput {
+  // Validate inputs
+  const sanitizedResume = sanitizeInput(input.resumeText);
+  const sanitizedJobDesc = sanitizeInput(input.jobDescription);
+
+  if (!isValidInput(sanitizedResume, VALIDATION_CONSTRAINTS.MIN_RESUME_LENGTH)) {
+    return createDefaultOutput('Resume must have at least 50 characters');
+  }
+
+  if (!isValidInput(sanitizedJobDesc, VALIDATION_CONSTRAINTS.MIN_JOB_DESCRIPTION_LENGTH)) {
+    return createDefaultOutput('Job description must have at least 50 characters');
+  }
+
+  // Validate template ID exists
+  if (!templateExists(input.templateId)) {
+    return createDefaultOutput(`Template "${input.templateId}" not found. Please select a valid template.`);
+  }
+
   // Extract info from job description
-  const extractedInfo = extractJobInfo(input.jobDescription);
-  const resumeInfo = extractResumeInfo(input.resumeText);
+  const extractedInfo = extractJobInfo(sanitizedJobDesc);
+  const resumeInfo = extractResumeInfo(sanitizedResume);
 
   // Build template data
   const data: Partial<CoverLetterData> = {
@@ -41,8 +64,8 @@ export function generateCoverLetterFromInputs(input: CoverLetterInput): CoverLet
     relevant_expertise: resumeInfo.topSkills.slice(0, 3).join(', ') || '[Your Expertise]',
     company_focus: extractedInfo.focus || 'innovation',
     key_achievement: resumeInfo.topAchievement || 'driving measurable results',
-    resumeText: input.resumeText,
-    jobDescription: input.jobDescription
+    resumeText: sanitizedResume,
+    jobDescription: sanitizedJobDesc
   };
 
   // Generate the letter
@@ -58,6 +81,25 @@ export function generateCoverLetterFromInputs(input: CoverLetterInput): CoverLet
     wordCount,
     suggestions
   };
+}
+
+/**
+ * Creates a default error output
+ */
+function createDefaultOutput(message: string): CoverLetterOutput {
+  return {
+    letter: '',
+    templateUsed: '',
+    wordCount: 0,
+    suggestions: [message]
+  };
+}
+
+/**
+ * Checks if a template ID exists
+ */
+function templateExists(templateId: string): boolean {
+  return coverLetterTemplates.some(t => t.id === templateId);
 }
 
 function extractJobInfo(jobDescription: string): {
@@ -104,18 +146,11 @@ function extractJobInfo(jobDescription: string): {
     }
   }
 
-  // Detect industry
-  const industryKeywords: Record<string, string[]> = {
-    'technology': ['software', 'tech', 'saas', 'platform', 'digital'],
-    'finance': ['fintech', 'banking', 'financial', 'investment', 'trading'],
-    'healthcare': ['health', 'medical', 'clinical', 'patient', 'pharma'],
-    'education': ['education', 'learning', 'academic', 'university', 'school'],
-    'e-commerce': ['ecommerce', 'retail', 'marketplace', 'shopping', 'merchant']
-  };
-
+  // Detect industry using shared constant
   let industry: string | null = null;
   const jdLower = jobDescription.toLowerCase();
-  for (const [ind, keywords] of Object.entries(industryKeywords)) {
+  
+  for (const [ind, keywords] of Object.entries(INDUSTRY_KEYWORDS)) {
     if (keywords.some(kw => jdLower.includes(kw))) {
       industry = ind;
       break;

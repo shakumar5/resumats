@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { generateFAQSchema } from '../utils/seoUtils';
 
 const faqData = [
   {
@@ -38,9 +39,10 @@ const faqData = [
 ---
 
 <BaseLayout
-  title="Online Resume Builder with ATS Score - Free ATS Resume Checker & Optimizer | Online Resume ATS"
-  description="Free online resume builder with ATS score checker. Build ATS-friendly resumes, check resume score online, optimize keywords, and generate cover letters. No sign-up, unlimited scans, 100% browser-based privacy."
-  keywords="online resume builder with ATS score, online resume builder, resume builder with ATS score, ATS resume checker, free ATS resume builder, resume maker online, resume builder for ATS optimization, resume score checker online, ATS friendly resume builder free, AI resume builder with ATS score, resume optimization tool online, AI resume builder, AI resume checker, AI resume optimizer, resume rewrite AI tool, smart resume builder online, ATS resume format for freshers, ATS resume for software engineer, ATS resume template free download, best resume format for job application, resume keywords for ATS system, how to create ATS friendly resume online, free resume builder with ATS score checker, how to improve ATS score of resume, best resume builder for job application free, how ATS system reads resume, what is ATS in resume, how does ATS score work, how to make resume ATS friendly, which resume format is best for ATS, can ATS reject good resumes, ATS resume for IT jobs, ATS resume for banking jobs, ATS resume for finance jobs, ATS resume for marketing jobs, ATS resume for fresh graduates, ATS resume for experienced professionals, resume parsing system, keyword optimization resume, job description matching resume, recruiter resume screening software, resume readability score, resume ATS score checker free, resume keyword optimizer tool, resume job match checker, resume AI improvement tool, resume CV builder with score, resume parser tool, ATS resume format, free resume builder online"
+  title="Free ATS Resume Checker & Optimizer Tools | Online Resume ATS"
+  description="Free ATS resume checker with keyword optimizer, cover letter generator & domain converter. Score your resume, optimize keywords, generate cover letters instantly. 100% browser-based, no signup required."
+  keywords="online resume builder with ATS score, online resume builder, ATS resume checker free, free resume builder online, ATS score checker, resume optimizer, resume keyword analyzer, cover letter generator free, domain converter resume, ATS friendly resume, best resume builder 2024"
+  faqData={faqData}
 >
   <!-- Hero Section -->
   <section class="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-blue-50">

@@ -9,6 +9,7 @@ interface Props {
   ogImage?: string;
   articleDate?: string;
   noindex?: boolean;
+  faqData?: Array<{ question: string; answer: string }>;
 }
 
 const {
@@ -17,7 +18,8 @@ const {
   canonicalURL,
   keywords = 'online resume builder with ATS score, ATS resume checker, free ATS resume builder, resume score checker online, ATS friendly resume builder free, AI resume builder, resume optimization tool online, resume keyword optimizer tool, resume maker online, free resume builder online, ATS resume format, resume parser tool',
   ogImage = '/og-image.svg',
-  noindex = false
+  noindex = false,
+  faqData = null
 } = Astro.props;
 const siteURL = 'https://onlineresumats.com';
 const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
@@ -28,6 +30,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="description" content={description} />
   <meta name="keywords" content={keywords} />
   <meta name="author" content="Online Resume ATS" />
@@ -106,7 +109,22 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
     ]
   })} />
 
+  <!-- Structured Data - FAQPage (if FAQ is present) -->
+  {faqData && <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqData.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  })} />}
+
   <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-9843041963430696" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9843041963430696" crossorigin="anonymous"></script>
 
   <!-- Google Analytics (GA4) - loaded async, non-blocking -->
