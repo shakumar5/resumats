@@ -1,8 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /404
+Disallow: /500
 
-Sitemap: https://onlineresumats.com/sitemap.xml
+Sitemap: https://onlineresumats.com/sitemap-index.xml
 
+# Crawl-delay for polite bots
 User-agent: AhrefsBot
 Crawl-delay: 10
 

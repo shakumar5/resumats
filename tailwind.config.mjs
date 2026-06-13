@@ -32,6 +32,13 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
+      fontWeight: {
+        normal: '400',
+        medium: '400',
+        semibold: '700',
+        bold: '700',
+        extrabold: '700',
+      },
     },
   },
   plugins: [],

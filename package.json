@@ -11,6 +11,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/partytown": "^2.1.7",
+    "@astrojs/sitemap": "^3.2.1",
     "@fontsource/inter": "^5.2.8",
     "astro": "^4.16.0",
     "pdf-lib": "^1.17.1",

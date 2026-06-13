@@ -5,7 +5,6 @@ interface Props {
   title: string;
   description?: string;
   canonicalURL?: string;
-  keywords?: string;
   ogImage?: string;
   articleDate?: string;
   noindex?: boolean;
@@ -16,8 +15,7 @@ const {
   title,
   description = 'Free online resume builder with ATS score checker. Build ATS-friendly resumes, check resume score, optimize keywords, and generate cover letters. No sign-up, unlimited scans, 100% privacy.',
   canonicalURL,
-  keywords = 'online resume builder with ATS score, ATS resume checker, free ATS resume builder, resume score checker online, ATS friendly resume builder free, AI resume builder, resume optimization tool online, resume keyword optimizer tool, resume maker online, free resume builder online, ATS resume format, resume parser tool',
-  ogImage = '/og-image.svg',
+  ogImage = '/og-image.png',
   noindex = false,
   faqData = null
 } = Astro.props;
@@ -32,7 +30,6 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="description" content={description} />
-  <meta name="keywords" content={keywords} />
   <meta name="author" content="Online Resume ATS" />
   <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
   <meta name="googlebot" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
@@ -46,7 +43,7 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <meta name="theme-color" content="#2563eb" />
   <link rel="canonical" href={currentURL} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="sitemap" href="/sitemap.xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -123,14 +120,14 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
     }))
   })} />}
 
-  <!-- Google AdSense -->
+  <!-- Google AdSense - deferred to not block rendering -->
   <meta name="google-adsense-account" content="ca-pub-9843041963430696" />
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9843041963430696" crossorigin="anonymous"></script>
 
-  <!-- Google Analytics (GA4) - loaded async, non-blocking -->
+  <!-- Google Analytics (GA4) - offloaded to web worker via Partytown -->
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-94DJ0GKP7W"></script>
-  <script>
+  <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+  <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-94DJ0GKP7W"></script>
+  <script type="text/partytown">
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
@@ -143,9 +140,9 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
   <header class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <a href="/" class="flex items-center gap-2 group">
+        <a href="/" class="flex items-center gap-2 group" aria-label="Online Resume ATS - Home">
           <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
           </div>
@@ -160,8 +157,8 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
         </div>
 
         <!-- Mobile menu button -->
-        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100" aria-label="Toggle menu">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
@@ -187,9 +184,9 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div class="col-span-1 md:col-span-2">
-          <a href="/" class="flex items-center gap-2 mb-4">
+          <a href="/" class="flex items-center gap-2 mb-4" aria-label="Online Resume ATS - Home">
             <div class="w-8 h-8 bg-gradient-to-br from-primary-600 to-primary-700 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
@@ -227,11 +224,23 @@ const currentURL = canonicalURL || `${siteURL}${Astro.url.pathname}`;
     </div>
   </footer>
 
+  <!-- Deferred AdSense loading - loads after page is interactive -->
   <script>
     const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     btn?.addEventListener('click', () => {
       menu?.classList.toggle('hidden');
+    });
+
+    // Load AdSense after page is fully loaded (non-blocking)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const adScript = document.createElement('script');
+        adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9843041963430696';
+        adScript.async = true;
+        adScript.crossOrigin = 'anonymous';
+        document.head.appendChild(adScript);
+      }, 2000);
     });
   </script>
 </body>

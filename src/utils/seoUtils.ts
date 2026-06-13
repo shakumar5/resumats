@@ -59,11 +59,6 @@ export function generateSoftwareApplicationSchema(tools: ToolMetadata[], siteURL
           "@type": "Offer",
           "price": "0",
           "priceCurrency": "USD"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.8",
-          "ratingCount": "100"
         }
       }
     }))
@@ -89,11 +84,6 @@ export function generateProductSchema(siteURL: string) {
       "price": "0",
       "availability": "https://schema.org/InStock",
       "url": `${siteURL}`
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "250"
     }
   };
 }
