@@ -1,4 +1,4 @@
-# Redirect non-canonical Cloudflare domains to primary domain
-https://resumats.pages.dev/* https://onlineresumats.com/:splat 301
-https://*.resumats.pages.dev/* https://onlineresumats.com/:splat 301
-https://resumats.workers.dev/* https://onlineresumats.com/:splat 301
+# Redirects
+# Note: Domain-level redirects (e.g., pages.dev -> custom domain)
+# should be configured via Cloudflare Bulk Redirects in the dashboard,
+# not in this file. Only relative path redirects are supported here.
