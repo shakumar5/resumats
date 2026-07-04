@@ -12,6 +12,11 @@ export default defineConfig({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
+      filter: (page) =>
+        !page.includes('/404') &&
+        !page.includes('/500') &&
+        !page.includes('/privacy-policy') &&
+        !page.includes('/terms'),
       serialize(item) {
         // Higher priority for tool pages
         if (item.url === 'https://onlineresumats.com/') {

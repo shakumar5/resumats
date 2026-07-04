@@ -3,6 +3,15 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# Noindex staging/preview domains at the HTTP header level
+# (Cloudflare Pages serves this on *.pages.dev too)
+https://*.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+https://*.workers.dev/*
+  X-Robots-Tag: noindex, nofollow
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
